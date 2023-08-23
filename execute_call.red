@@ -1,6 +1,7 @@
 Red []
 
 #include %castr/client-tools.red
+;#include %castr/common-tools.red
 
 ; renvoie une chaine de caractères avec un préfixe à "0" si l'entrée est inférieure à 10
 tostr0: function [ val [integer!] ] [
@@ -21,7 +22,7 @@ extractstr: function [ val [string!] ] [
 cr: #"^(line)"
 
 ; Configuration de l'authentification AWS
-; lecture du fichier "credentials"  dans le répertoire racine du répertoire courant
+; lecture du fichier "credentials" dans le répertoire racine du répertoire courant
 cred: read/lines %../credentials
 foreach lines cred [
     if fnd: find lines "aws_access_key_id" [
@@ -29,6 +30,9 @@ foreach lines cred [
     ]
     if fnd: find lines "aws_secret_access_key" [
         secret_key: pick split fnd "=" 2
+    ]
+    if fnd: find lines "region" [
+        region_key: pick split fnd "=" 2
     ]
 ]
 ;session_token = 'votre_session_token'  # Facultatif si vous utilisez des rôles IAM
@@ -53,9 +57,12 @@ foreach lines cred [
 ; request_parameters : "/" [statique]
 ; querystring : aucun
 
-; method host uri querystring [ required_request_values required_request_parameters ] [ optional_request_values optional_request_parameters ] request_body
-list_buckets_param: [ "GET" "s3" "/" "" [] [] "" ]
-get_bucket_policy_param: [ "GET" "_bucket.s3._region" "/" "?policy" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
+; method host uri querystring
+; [ required_request_values required_request_parameters ] [ optional_request_values optional_request_parameters ] request_body mandatory_region
+list_buckets_param: [ "GET" "s3" "/" "" [] [] "" "us-east-1" ]
+get_bucket_lifecycle_param: [ "GET" "_bucket.s3" "/" "?lifecycle" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_location_param: [ "GET" "_bucket.s3" "/" "?location" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_policy_param: [ "GET" "_bucket.s3._region" "/" "?policy" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
 
 ; META
 ;les arguments optionnels doivent être mis en refinement
@@ -74,7 +81,8 @@ execute_call: function [ param [block!] val [block!] ] [
     ; Configuration de l'appel à l'API
     method: param/1
     subhost: param/2
-    region: "us-east-1"
+    region: region_key
+    if param/8 <> "" [ region: param/8 ]
     if find subhost "_bucket" [
         bucket: to string! select val "_bucket"
         replace subhost "_bucket" bucket
@@ -117,15 +125,17 @@ execute_call: function [ param [block!] val [block!] ] [
     temps: now/utc/time
     amz_date: rejoin [ datestamp "T" tostr0 temps/hour tostr0 temps/minute tostr0 to-integer temps/second "Z" ]
 
+    ;access_key:	"AKIAIOSFODNN7EXAMPLE"
+    ;secret_key:	"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    ;datestamp: "20130524"
+    ;amz_date: "20130524T000000Z"
+    ;region: "us-east-1"
+
     request_body: param/7
     request_body_hash: extractstr lowercase mold checksum request_body 'SHA256
-;    append canonical_headers rejoin [ "host:" host cr "x-amz-content-sha256:" request_body_hash cr "x-amz-date:" amz_date cr]
-    append canonical_headers_blk [ "x-amz-date:" amz_date cr "x-amz-content-sha256:" request_body_hash cr "host:" host cr]
+    repend canonical_headers_blk [ "host:" host cr "x-amz-content-sha256:" request_body_hash cr "x-amz-date:" amz_date cr ]
 
-    append headerblock "x-amz-content-sha256:"
-    append headerblock request_body_hash
-    append headerblock "x-amz-date:"
-    append headerblock amz_date
+    repend headerblock [ "x-amz-content-sha256:" request_body_hash "x-amz-date:" amz_date ]
 
     request_parameters: select val "param"
 
@@ -141,12 +151,9 @@ execute_call: function [ param [block!] val [block!] ] [
                 header: select required_request_parameters rqn
                 headerval: select request_parameters rqn
                 append signed_headers_blk rejoin [ header ";" ]
-                append canonical_headers_blk rejoin [ header ":" ]
-                append canonical_headers_blk headerval
-                append canonical_headers_blk cr
+                repend canonical_headers_blk [ rejoin [ header ":" ] headerval cr ]
 
-                append/only headerblock rejoin [ header ":" ]
-                append/only headerblock headerval
+                repend headerblock [ rejoin [ header ":" ] headerval ]
             ]
         ]
         [
@@ -163,12 +170,9 @@ execute_call: function [ param [block!] val [block!] ] [
                 header: select optional_request_parameters rqn
                 headerval: select request_parameters rqn
                 append signed_headers_blk rejoin [ header ";" ]
-                append canonical_headers_blk rejoin [ header ":" ]
-                append canonical_headers_blk headerval
-                append canonical_headers_blk cr
+                repend canonical_headers_blk [ rejoin [ header ":" ] headerval cr ]
 
-                append/only headerblock rejoin [ header ":" ]
-                append/only headerblock headerval
+                repend headerblock [ rejoin [ header ":" ] headerval ]
             ]
         ]
         [
@@ -191,18 +195,36 @@ execute_call: function [ param [block!] val [block!] ] [
     canonical_headers: rejoin canonical_headers_blk
 
     print canonical_headers
+; AFAIRE canonical_querystring doit être encodé
+;   prefix=somePrefix&marker=someMarker&max-keys=20
+;   =>
+;   UriEncode("marker")+"="+UriEncode("someMarker")+"&"+
+;   UriEncode("max-keys")+"="+UriEncode("20") + "&" +
+;   UriEncode("prefix")+"="+UriEncode("somePrefix")
 
+; url-encode "lifecycle?" "="
+
+; utiliser url-encode (de rebolek)
     canonical_request: rejoin [ method cr canonical_uri cr canonical_querystring cr canonical_headers cr signed_headers cr request_body_hash ]
     print "--canonical_request--"
     print canonical_request
     credential_scope: rejoin [ datestamp "/" region "/" service "/aws4_request"]
     string_to_sign: rejoin [ algorithm cr amz_date cr credential_scope cr extractstr lowercase mold checksum canonical_request 'SHA256 ]
-    signing_key_date: checksum/with datestamp 'SHA256 rejoin [ "AWS4" secret_key ]
-    signing_key_region: checksum/with region 'SHA256 signing_key_date
-    signing_key_service: checksum/with service 'SHA256 signing_key_region
-    signing_key_signing: checksum/with "aws4_request" 'SHA256 signing_key_service
-    signature: extractstr lowercase mold checksum/with string_to_sign 'SHA256 signing_key_signing
 
+    print "--string_to_sign--"
+    print string_to_sign
+    print "--fin string_to_sign--"
+
+    signing_key_date: checksum/with datestamp 'SHA256 rejoin [ "AWS4" secret_key ]
+    ;print signing_key_date
+    signing_key_region: checksum/with region 'SHA256 signing_key_date
+    ;print signing_key_region
+    signing_key_service: checksum/with service 'SHA256 signing_key_region
+    ;print signing_key_service
+    signing_key_signing: checksum/with "aws4_request" 'SHA256 signing_key_service
+    ;print signing_key_signing
+    signature: extractstr lowercase mold checksum/with string_to_sign 'SHA256 signing_key_signing
+    print [ "signature:" signature ]
     authorization: rejoin [ algorithm " Credential=" access_key "/" credential_scope ", SignedHeaders=" signed_headers ", Signature=" signature ]
     ; Envoi de la requête à l'API
     ;headers: make map! []
@@ -210,20 +232,27 @@ execute_call: function [ param [block!] val [block!] ] [
     ;put headers "X-Amz-Content-Sha256" request_body_hash
     ;put headers "Authorization" authorization
 
-    append headerblock "authorization:"
-    append headerblock authorization
+    repend headerblock [ "authorization:" authorization ]
 
     print [ "endpoint:" endpoint ]
     print [ "headerblock:" headerblock ]
     print [ "request_parameters:" request_parameters ]
 
     whatcalled: rejoin [endpoint canonical_uri canonical_querystring_orig ]   ;<========= OUI
+    print [ "whatcalled:" whatcalled ]
     sortie: send-request/data/with to-url whatcalled to word! method request_parameters headerblock
     print sortie
     ; on récupère une map!
     ; code, headers, cookies, raw
 ]
 
-val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [ "ExpectedBucketOwner" "valeurTEST" ] ]
-execute_call get_bucket_policy_param val
-execute_call list_buckets_param []
+;OK val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "param" [] ]
+;OK execute_call get_bucket_lifecycle_param val
+
+;le canonical request n'est pas bon
+
+;OK val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [ "ExpectedBucketOwner" "123451234512" ] ]
+val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [] ]
+execute_call get_bucket_location_param val
+
+;OK execute_call list_buckets_param []
