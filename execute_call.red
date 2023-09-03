@@ -58,12 +58,26 @@ foreach lines cred [
 
 ; method host uri querystring
 ; [ required_request_values required_request_parameters ] [ optional_request_values optional_request_parameters ] request_body mandatory_region
-get_bucket_analytics_configuration_param:  [ "GET" "_bucket.s3" "/" "?analytics&id=_Id" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_accelerate_configuration_param: [ "GET" "_bucket.s3" "/" "?accelerate" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" "RequestPayer" "x-amz-request-payer" ] "" "" ]
 get_bucket_acl_param: [ "GET" "_bucket.s3" "/" "?acl" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_analytics_configuration_param:  [ "GET" "_bucket.s3" "/" "?analytics&id=_Id" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_cors_param: [ "GET" "_bucket.s3" "/" "?cors" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
 get_bucket_encryption_param: [ "GET" "_bucket.s3" "/" "?encryption" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_lifecycle_param: [ "GET" "_bucket.s3" "/" "?lifecycle" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_inventory_configuration_param:  [ "GET" "_bucket.s3" "/" "?inventory&id=_Id" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_intelligent_tiering_configuration_param:  [ "GET" "_bucket.s3" "/" "?intelligent-tiering&id=_Id" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_lifecycle_configuration_param: [ "GET" "_bucket.s3" "/" "?lifecycle" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
 get_bucket_location_param: [ "GET" "_bucket.s3" "/" "?location" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_policy_param: [ "GET" "_bucket.s3._region" "/" "?policy" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_logging_param: [ "GET" "_bucket.s3" "/" "?logging" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_notification_configuration_param: [ "GET" "_bucket.s3" "/" "?notification" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_ownership_controls_param: [ "GET" "_bucket.s3" "/" "?ownershipControls" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_metrics_configuration_param:  [ "GET" "_bucket.s3" "/" "?metrics&id=_Id" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_policy_param: [ "GET" "_bucket.s3" "/" "?policy" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_policy_status_param: [ "GET" "_bucket.s3" "/" "?policyStatus" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_replication_param: [ "GET" "_bucket.s3" "/" "?replication" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_request_payment_param: [ "GET" "_bucket.s3" "/" "?requestPayment" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_tagging_param: [ "GET" "_bucket.s3" "/" "?tagging" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_versioning_param: [ "GET" "_bucket.s3" "/" "?versioning" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_website_param: [ "GET" "_bucket.s3" "/" "?website" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
 list_buckets_param: [ "GET" "s3" "/" "" [] [] "" "us-east-1" ]
 
 ; META
@@ -110,7 +124,7 @@ execute_call: function [ param [block!] val [block!] ] [
         replace canonical_querystring_brute key value
         ]
     ]
-    probe ["canonical_querystring_brute" canonical_querystring_brute]
+    print ["canonical_querystring_brute" canonical_querystring_brute]
     canonical_querystring_orig: canonical_querystring_brute
 
     ; https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html
@@ -136,7 +150,7 @@ execute_call: function [ param [block!] val [block!] ] [
 ;-----------
     canonical_querystring: copy canonical_querystring_orig
     if canonical_querystring_orig <> "" [
-        canonical_querystring: ""
+        canonical_querystring: clear ""
         canonical_querystring_split: split next canonical_querystring_orig "&" ; next permet de supprimer "?"
         sort canonical_querystring_split
         foreach elem canonical_querystring_split [
@@ -222,7 +236,6 @@ execute_call: function [ param [block!] val [block!] ] [
     canonical_headers: rejoin canonical_headers_blk
 
     print canonical_headers
-
     canonical_request: rejoin [ method cr canonical_uri cr canonical_querystring cr canonical_headers cr signed_headers cr request_body_hash ]
     print "--canonical_request--"
     print canonical_request
@@ -262,14 +275,25 @@ execute_call: function [ param [block!] val [block!] ] [
     print to string! reply/3
 ]
 
-;OK val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "param" [] ]
-;OK execute_call get_bucket_lifecycle_param val
+;val: [ "_bucket" "test-hosting-dual-apps" "param" [] ]
+;execute_call get_bucket_logging_param val
+;execute_call get_bucket_website_param val
+;execute_call get_bucket_policy_param val
+;execute_call get_bucket_cors_param val
+;execute_call get_bucket_tagging_param val
+;execute_call get_bucket_versioning_param val
 
-;OK val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [ "ExpectedBucketOwner" "123451234512" ] ]
-;val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [ "ExpectedBucketOwner" "123451234512" ] ]
-;execute_call get_bucket_location_param val
-val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [] ]
-execute_call list_buckets_param []
+;;OK val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [ "ExpectedBucketOwner" "123451234512" ] ]
 
-val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "query" [ "_Id" "conftest" ] "param" [] ]
-execute_call get_bucket_analytics_configuration_param val
+;val: [ "_bucket" "test-hosting-dual-apps" "param" [ "ExpectedBucketOwner" "123451234512" ] ]
+val: [ "_bucket" "test-hosting-dual-apps" "param" [ "ExpectedBucketOwner" "436735548418" "RequestPayer" "zzzzzz" ] ]
+execute_call get_bucket_accelerate_configuration_param val
+
+;val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [] ]
+;execute_call list_buckets_param []
+
+;val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [ "_Id" "conftest" ] "param" [] ]
+;execute_call get_bucket_analytics_configuration_param val
+;execute_call get_bucket_inventory_configuration_param val
+;execute_call get_bucket_intelligent_tiering_configuration_param val
+;execute_call get_bucket_metrics_configuration_param val

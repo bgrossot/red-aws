@@ -32,28 +32,28 @@ download_file
 download_fileobj
 generate_presigned_post
 generate_presigned_url
-get_bucket_accelerate_configuration
+    get_bucket_accelerate_configuration
     get_bucket_acl
     get_bucket_analytics_configuration
-get_bucket_cors
+    get_bucket_cors
     get_bucket_encryption
-get_bucket_intelligent_tiering_configuration
-get_bucket_inventory_configuration
-    get_bucket_lifecycle
-get_bucket_lifecycle_configuration
+    get_bucket_intelligent_tiering_configuration
+    get_bucket_inventory_configuration
+        obsolète get_bucket_lifecycle
+    get_bucket_lifecycle_configuration
     get_bucket_location
-get_bucket_logging
-get_bucket_metrics_configuration
-get_bucket_notification
-get_bucket_notification_configuration
-get_bucket_ownership_controls
+    get_bucket_logging
+    get_bucket_metrics_configuration
+        obsolète get_bucket_notification
+    get_bucket_notification_configuration
+    get_bucket_ownership_controls
     get_bucket_policy
-get_bucket_policy_status
-get_bucket_replication
-get_bucket_request_payment
-get_bucket_tagging
-get_bucket_versioning
-get_bucket_website
+    get_bucket_policy_status
+    get_bucket_replication
+    get_bucket_request_payment
+    get_bucket_tagging
+    get_bucket_versioning
+    get_bucket_website
 get_object
 get_object_acl
 get_object_attributes
