@@ -56,29 +56,33 @@ foreach lines cred [
 ; request_parameters : "/" [statique]
 ; querystring : aucun
 
-; method host uri querystring
+; method host uri querystring [ optional_querystring ]
 ; [ required_request_values required_request_parameters ] [ optional_request_values optional_request_parameters ] request_body mandatory_region
-get_bucket_accelerate_configuration_param: [ "GET" "_bucket.s3" "/" "?accelerate" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" "RequestPayer" "x-amz-request-payer" ] "" "" ]
-get_bucket_acl_param: [ "GET" "_bucket.s3" "/" "?acl" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_analytics_configuration_param:  [ "GET" "_bucket.s3" "/" "?analytics&id=_Id" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_cors_param: [ "GET" "_bucket.s3" "/" "?cors" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_encryption_param: [ "GET" "_bucket.s3" "/" "?encryption" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_inventory_configuration_param:  [ "GET" "_bucket.s3" "/" "?inventory&id=_Id" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_intelligent_tiering_configuration_param:  [ "GET" "_bucket.s3" "/" "?intelligent-tiering&id=_Id" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_lifecycle_configuration_param: [ "GET" "_bucket.s3" "/" "?lifecycle" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_location_param: [ "GET" "_bucket.s3" "/" "?location" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_logging_param: [ "GET" "_bucket.s3" "/" "?logging" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_notification_configuration_param: [ "GET" "_bucket.s3" "/" "?notification" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_ownership_controls_param: [ "GET" "_bucket.s3" "/" "?ownershipControls" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_metrics_configuration_param:  [ "GET" "_bucket.s3" "/" "?metrics&id=_Id" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_policy_param: [ "GET" "_bucket.s3" "/" "?policy" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_policy_status_param: [ "GET" "_bucket.s3" "/" "?policyStatus" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_replication_param: [ "GET" "_bucket.s3" "/" "?replication" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_request_payment_param: [ "GET" "_bucket.s3" "/" "?requestPayment" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_tagging_param: [ "GET" "_bucket.s3" "/" "?tagging" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_versioning_param: [ "GET" "_bucket.s3" "/" "?versioning" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-get_bucket_website_param: [ "GET" "_bucket.s3" "/" "?website" [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
-list_buckets_param: [ "GET" "s3" "/" "" [] [] "" "us-east-1" ]
+get_bucket_accelerate_configuration_param: [ "GET" "_bucket.s3" "/" "?accelerate" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" "RequestPayer" "x-amz-request-payer" ] "" "" ]
+get_bucket_acl_param: [ "GET" "_bucket.s3" "/" "?acl" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_analytics_configuration_param:  [ "GET" "_bucket.s3" "/" "?analytics&id=_Id" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_cors_param: [ "GET" "_bucket.s3" "/" "?cors" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_encryption_param: [ "GET" "_bucket.s3" "/" "?encryption" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_inventory_configuration_param:  [ "GET" "_bucket.s3" "/" "?inventory&id=_Id" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_intelligent_tiering_configuration_param:  [ "GET" "_bucket.s3" "/" "?intelligent-tiering&id=_Id" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_lifecycle_configuration_param: [ "GET" "_bucket.s3" "/" "?lifecycle" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_location_param: [ "GET" "_bucket.s3" "/" "?location" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_logging_param: [ "GET" "_bucket.s3" "/" "?logging" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_notification_configuration_param: [ "GET" "_bucket.s3" "/" "?notification" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_ownership_controls_param: [ "GET" "_bucket.s3" "/" "?ownershipControls" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_metrics_configuration_param:  [ "GET" "_bucket.s3" "/" "?metrics&id=_Id" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_policy_param: [ "GET" "_bucket.s3" "/" "?policy" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_policy_status_param: [ "GET" "_bucket.s3" "/" "?policyStatus" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_replication_param: [ "GET" "_bucket.s3" "/" "?replication" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_request_payment_param: [ "GET" "_bucket.s3" "/" "?requestPayment" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_tagging_param: [ "GET" "_bucket.s3" "/" "?tagging" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_versioning_param: [ "GET" "_bucket.s3" "/" "?versioning" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+get_bucket_website_param: [ "GET" "_bucket.s3" "/" "?website" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+
+list_bucket_analytics_configuration_param:  [ "GET" "_bucket.s3" "/" "?analytics" [ "continuation-token" "_ContinuationToken" ]
+                                              [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" "" ]
+
+list_buckets_param: [ "GET" "s3" "/" "" [] [] [] "" "us-east-1" ]
 
 ; META
 ;les arguments optionnels doivent être mis en refinement
@@ -98,7 +102,7 @@ execute_call: function [ param [block!] val [block!] ] [
     method: param/1
     subhost: param/2
     region: region_key
-    if param/8 <> "" [ region: param/8 ]
+    if param/9 <> "" [ region: param/9 ]
     if find subhost "_bucket" [
         bucket: to string! select val "_bucket"
         replace subhost "_bucket" bucket
@@ -113,6 +117,7 @@ execute_call: function [ param [block!] val [block!] ] [
 
     canonical_uri: param/3
 
+    ; quuerystring
     canonical_querystring_brute: param/4
 
     query_parameters: select val "query"
@@ -121,11 +126,28 @@ execute_call: function [ param [block!] val [block!] ] [
     if query_parameters <> none
     [
         foreach [ key value ] query_parameters [
-        replace canonical_querystring_brute key value
+            replace canonical_querystring_brute key value ; uniquement les paramètres obligatoires
         ]
     ]
     print ["canonical_querystring_brute" canonical_querystring_brute]
     canonical_querystring_orig: canonical_querystring_brute
+
+    ; optional querystring
+    optional_querystring_brute: param/5
+    if optional_querystring_brute <> [] [
+        if query_parameters <> none
+        [
+            foreach [ key value ] query_parameters [
+                idx: index? find optional_querystring_brute key
+                if idx <> none [
+                    toadd: rejoin [ "&" optional_querystring_brute/(idx - 1) "=" value ]
+                ]
+                append canonical_querystring_orig toadd ; uniquement les paramètres optionnels
+            ]
+        ]
+    ]
+
+    print ["canonical_querystring_orig" canonical_querystring_orig]
 
     ; https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html
     ; on n'utilise pas canonical_querystring directement, il faut le transformer
@@ -162,16 +184,17 @@ execute_call: function [ param [block!] val [block!] ] [
         ]
         take/last canonical_querystring
     ]
-
+    print ["canonical_querystring" canonical_querystring]
+quit
+    ; Génération de la signature de la requête
     signed_headers_blk: copy [ "host;" "x-amz-date;" "x-amz-content-sha256;" ] ; minimum obligatoire
     canonical_headers_blk: clear []
-    ; Génération de la signature de la requête
     algorithm: "AWS4-HMAC-SHA256"
     datestamp: rejoin [ now/utc/year tostr0 now/utc/month tostr0 now/utc/day ]
     temps: now/utc/time
     amz_date: rejoin [ datestamp "T" tostr0 temps/hour tostr0 temps/minute tostr0 to-integer temps/second "Z" ]
 
-    request_body: param/7
+    request_body: param/8
     request_body_hash: extractstr lowercase mold checksum request_body 'SHA256
     repend canonical_headers_blk [ "host:" host cr "x-amz-content-sha256:" request_body_hash cr "x-amz-date:" amz_date cr ]
 
@@ -182,7 +205,7 @@ execute_call: function [ param [block!] val [block!] ] [
     request_parameters: select val "param"
 
     ; paramètres obligatoires
-    required_request_parameters: param/5
+    required_request_parameters: param/6
     print required_request_parameters
     print intersect required_request_parameters val
     if required_request_parameters <> [] [
@@ -203,7 +226,7 @@ execute_call: function [ param [block!] val [block!] ] [
         ]
     ]
     ; paramètres optionnels
-    optional_request_parameters: param/6
+    optional_request_parameters: param/7
     if optional_request_parameters <> [] [
         request_parameters_name: extract request_parameters 2
         either (intersect optional_request_parameters request_parameters_name) == request_parameters_name [
@@ -283,14 +306,15 @@ execute_call: function [ param [block!] val [block!] ] [
 ;execute_call get_bucket_tagging_param val
 ;execute_call get_bucket_versioning_param val
 
-;;OK val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [ "ExpectedBucketOwner" "123451234512" ] ]
-
-;val: [ "_bucket" "test-hosting-dual-apps" "param" [ "ExpectedBucketOwner" "123451234512" ] ]
-val: [ "_bucket" "test-hosting-dual-apps" "param" [ "ExpectedBucketOwner" "436735548418" "RequestPayer" "zzzzzz" ] ]
-execute_call get_bucket_accelerate_configuration_param val
+;val: [ "_bucket" "test-hosting-dual-apps" "param" [ "ExpectedBucketOwner" "436735548418" "RequestPayer" "zzzzzz" ] ]
+;execute_call get_bucket_accelerate_configuration_param val
 
 ;val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [] ]
 ;execute_call list_buckets_param []
+
+val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [ "_ContinuationToken" "oncontinue" ] "param" [] ]
+;val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [] "param" [] ]
+execute_call list_bucket_analytics_configuration_param val
 
 ;val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [ "_Id" "conftest" ] "param" [] ]
 ;execute_call get_bucket_analytics_configuration_param val
