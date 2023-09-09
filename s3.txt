@@ -67,7 +67,7 @@ get_public_access_block
 get_waiter
 head_bucket
 head_object
-list_bucket_analytics_configurations
+    list_bucket_analytics_configurations
 list_bucket_intelligent_tiering_configurations
 list_bucket_inventory_configurations
 list_bucket_metrics_configurations
@@ -79,7 +79,7 @@ list_objects_v2
 list_parts
 put_bucket_accelerate_configuration
 put_bucket_acl
-put_bucket_analytics_configuration
+    put_bucket_analytics_configuration
 put_bucket_cors
 put_bucket_encryption
 put_bucket_intelligent_tiering_configuration
