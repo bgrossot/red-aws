@@ -58,6 +58,8 @@ foreach lines cred [
 
 ; method host uri querystring [ optional_querystring ]
 ; [ required_request_values required_request_parameters ] [ optional_request_values optional_request_parameters ] mandatory_region
+delete_bucket_analytics_configuration_param:  [ DELETE "_bucket.s3" "/" "?analytics&id=_Id" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
+
 get_bucket_accelerate_configuration_param: [ GET "_bucket.s3" "/" "?accelerate" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" "RequestPayer" "x-amz-request-payer" ] "" ]
 get_bucket_acl_param: [ GET "_bucket.s3" "/" "?acl" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 get_bucket_analytics_configuration_param:  [ GET "_bucket.s3" "/" "?analytics&id=_Id" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
@@ -79,10 +81,30 @@ get_bucket_tagging_param: [ GET "_bucket.s3" "/" "?tagging" [] [] [ "ExpectedBuc
 get_bucket_versioning_param: [ GET "_bucket.s3" "/" "?versioning" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 get_bucket_website_param: [ GET "_bucket.s3" "/" "?website" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 
-list_bucket_analytics_configuration_param:  [ GET "_bucket.s3" "/" "?analytics" [ "continuation-token" "_ContinuationToken" ]
+list_bucket_analytics_configuration_param: [ GET "_bucket.s3" "/" "?analytics" [ "continuation-token" "_ContinuationToken" ]
+                                             [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
+list_bucket_intelligent_tiering_configurations_param: [ GET "_bucket.s3" "/" "?intelligent-tiering" [ "continuation-token" "_ContinuationToken" ]
+                                                         [] [] "" ]
+list_bucket_inventory_configurations_param: [ GET "_bucket.s3" "/" "?inventory" [ "continuation-token" "_ContinuationToken" ]
                                               [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
-
+list_bucket_metrics_configurations_param: [ GET "_bucket.s3" "/" "?metrics" [ "continuation-token" "_ContinuationToken" ]
+                                             [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 list_buckets_param: [ GET "s3" "/" "" [] [] [] "us-east-1" ]
+
+list_object_versions_param: [ GET "_bucket.s3" "/" "?versions" [ "delimiter" "_Delimiter" "encoding-type" "_EncodingType"
+                                                                 "key-marker" "_KeyMarker" "max-keys" "_MaxKeys"
+                                                                 "prefix" "_Prefix" "version-id-marker" "_VersionIdMarker" ]
+                                                                 [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner"
+                                                                      "RequestPayer" "x-amz-request-payer"
+                                                                      "OptionalObjectAttributes" "x-amz-optional-object-attributes" ] "" ]
+
+list_objects_v2_param: [ GET "_bucket.s3" "/" "?list-type=2" [ "continuation-token" "_ContinuationToken" "delimiter" "_Delimiter"
+                                                               "encoding-type" "_EncodingType" "fetch-owner" "_FetchOwner"
+                                                               "max-keys" "_MaxKeys" "prefix" "_Prefix"
+                                                               "start-after" "_StartAfter" ]
+                                                               [] [ "RequestPayer" "x-amz-request-payer"
+                                                                    "ExpectedBucketOwner" "x-amz-expected-bucket-owner"
+                                                                    "OptionalObjectAttributes" "x-amz-optional-object-attributes" ] "" ]
 
 put_bucket_analytics_configuration_param:  [ PUT "_bucket.s3" "/" "?analytics&id=_Id" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 
@@ -120,7 +142,7 @@ execute_call: function [ param [block!] val [block!] ] [
     canonical_uri: param/3
 
     ; quuerystring
-    canonical_querystring_brute: param/4
+    canonical_querystring_brute: copy param/4
 
     query_parameters: select val "query"
     ;print ["canonical_querystring_brute" canonical_querystring_brute]
@@ -140,16 +162,18 @@ execute_call: function [ param [block!] val [block!] ] [
         if query_parameters <> none
         [
             foreach [ key value ] query_parameters [
+                print [ "key" key "value" value ]
                 idx: index? find optional_querystring_brute key
+                print [ "idx" idx]
                 if idx <> none [
-                    toadd: rejoin [ "&" optional_querystring_brute/(idx - 1) "=" value ]
+                    toadd: rejoin [ "&" optional_querystring_brute/(idx) "=" value ]
                 ]
                 append canonical_querystring_orig toadd ; uniquement les paramètres optionnels
             ]
         ]
     ]
 
-    ;print ["canonical_querystring_orig" canonical_querystring_orig]
+    print ["canonical_querystring_orig" canonical_querystring_orig]
 
     ; https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html
     ; on n'utilise pas canonical_querystring directement, il faut le transformer
@@ -299,7 +323,7 @@ execute_call: function [ param [block!] val [block!] ] [
 
     whatcalled: rejoin [endpoint canonical_uri canonical_querystring_orig ]   ;<========= OUI
     print [ "whatcalled:" whatcalled ]
-    data: reduce [ method body-of headermap body]
+    data: reduce [ method body-of headermap request_body]
     probe data
     reply: write/binary/info to-url whatcalled data
     print reply/1
@@ -321,27 +345,8 @@ execute_call: function [ param [block!] val [block!] ] [
 ;val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [] ]
 ;execute_call list_buckets_param []
 
-; FAIRE TESTS AVEC CONTINUE
-;val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [ "_ContinuationToken" "oncontinue" ] "param" [] ]
-;val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [] "param" [] ]
-;execute_call list_bucket_analytics_configuration_param val
-; FIN FAIRE TESTS AVEC CONTINUE
+;val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [ "continuation-token" "54hgnlBJCTmhxRPJUXT6T0Ml_esx3XK4YAZlyzlmHd7mIOwTZHXUOAAAAAAAAAAB84rJnR0-5W8Y1uFKUJp9l5BDYLAk726aJ4RIMUQcKHnPByJh8XVZ3N0kVMeeDiABdOqN9eM9X4C3l_BrevgdXXr0BvaEJh9_qyhZ-3oJfQHstorMmAD-wsldVqeIkKTACXrkl7JGuVJMQ7lnFQa0v4phm6UECfGaoLS3XiKxpgmrBJXA2uRzi1AYR-FztESz3rNMTGDT9ZXxSvqstP0WsA" ] "param" [] ]
+;execute_call list_bucket_metrics_configurations_param val
+val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [ "prefix" "test" "encoding-type" "url" ] "param" [ "RequestPayer" "requester" ] ]
+execute_call list_objects_v2_param val
 
-;body: {"<?xml version=^"1.0^" encoding=^"UTF-8^" standalone=^"yes^"?><AnalyticsConfiguration xmlns=^"http://s3.amazonaws.com/doc/2006-03-01/^"><Id>newconftest</Id><StorageClassAnalysis/></AnalyticsConfiguration>"}
-body: {<?xml version="1.0" encoding="UTF-8"?><AnalyticsConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Id>newconftest</Id><StorageClassAnalysis><DataExport><OutputSchemaVersion>V_1</OutputSchemaVersion><Destination><S3BucketDestination><Format>CSV</Format><BucketAccountId>123456789012</BucketAccountId><Bucket>arn:aws:s3:::destination-bucket</Bucket><Prefix>destination-prefix</Prefix></S3BucketDestination></Destination></DataExport></StorageClassAnalysis></AnalyticsConfiguration>}
-;body: read %xml_aconf.txt
-val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [ "_Id" "newconftest" ] "param" [] "body" body ]
-execute_call put_bucket_analytics_configuration_param val
-
-;execute_call get_bucket_inventory_configuration_param val
-;execute_call get_bucket_intelligent_tiering_configuration_param val
-;execute_call get_bucket_metrics_configuration_param val
-
-;<?xml version="1.0" encoding="UTF-8" standalone="yes"?><AnalyticsConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Id>conftest</Id><StorageClassAnalysis/></AnalyticsConfiguration>
-
-;<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-;<AnalyticsConfiguration
-;	xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-;	<Id>conftest</Id>
-;	<StorageClassAnalysis/>
-;</AnalyticsConfiguration>

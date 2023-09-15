@@ -12,7 +12,7 @@ copy_object
 create_bucket
 create_multipart_upload
 delete_bucket
-delete_bucket_analytics_configuration
+    delete_bucket_analytics_configuration
 delete_bucket_cors
 delete_bucket_encryption
 delete_bucket_intelligent_tiering_configuration
@@ -68,14 +68,14 @@ get_waiter
 head_bucket
 head_object
     list_bucket_analytics_configurations
-list_bucket_intelligent_tiering_configurations
-list_bucket_inventory_configurations
-list_bucket_metrics_configurations
+    list_bucket_intelligent_tiering_configurations
+    list_bucket_inventory_configurations
+    list_bucket_metrics_configurations
     list_buckets
 list_multipart_uploads
-list_object_versions
-list_objects
-list_objects_v2
+    list_object_versions
+        obsolète list_objects
+    list_objects_v2
 list_parts
 put_bucket_accelerate_configuration
 put_bucket_acl
