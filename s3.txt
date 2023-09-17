@@ -55,8 +55,8 @@ generate_presigned_url
     get_bucket_versioning
     get_bucket_website
 get_object
-get_object_acl
-get_object_attributes
+    get_object_acl
+    get_object_attributes
 get_object_legal_hold
 get_object_lock_configuration
 get_object_retention
@@ -65,8 +65,8 @@ get_object_torrent
 get_paginator
 get_public_access_block
 get_waiter
-head_bucket
-head_object
+    head_bucket
+    head_object
     list_bucket_analytics_configurations
     list_bucket_intelligent_tiering_configurations
     list_bucket_inventory_configurations

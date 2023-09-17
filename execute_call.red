@@ -81,6 +81,26 @@ get_bucket_tagging_param: [ GET "_bucket.s3" "/" "?tagging" [] [] [ "ExpectedBuc
 get_bucket_versioning_param: [ GET "_bucket.s3" "/" "?versioning" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 get_bucket_website_param: [ GET "_bucket.s3" "/" "?website" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 
+get_object_acl_param: [ GET "_bucket.s3" "/_key" "?acl" [ "versionId" "_VersionId" ]
+                                                          [] [ "RequestPayer" "x-amz-request-payer" "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
+
+get_object_attributes_param: [ GET "_bucket.s3" "/_key" "?attributes" [ "versionId" "_VersionId" ]
+                                                                        [] [ "MaxParts" "x-amz-max-parts" "PartNumberMarker" "x-amz-part-number-marker"
+                                                                        "SSECustomerAlgorithm" "x-amz-server-side-encryption-customer-algorithm"
+                                                                        "SSECustomerKey" "x-amz-server-side-encryption-customer-key"
+                                                                        "SSECustomerKeyMD5" "x-amz-server-side-encryption-customer-key-MD5"
+                                                                        "RequestPayer" "x-amz-request-payer" "ExpectedBucketOwner" "x-amz-expected-bucket-owner"
+                                                                        "ObjectAttributes" "x-amz-object-attributes" ] "" ]
+
+head_bucket_param: [ HEAD "_bucket.s3" "/" "" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
+head_object_param: [ HEAD "_bucket.s3" "/_key" "" [ "partNumber" "_PartNumber" "versionId" "_VersionId" ]
+                                                    [] [ "IfMatch" "If-Match" "IfModifiedSince" "If-Modified-Since"
+                                                    "IfNoneMatch" "If-None-Match" "IfUnmodifiedSince" "If-Unmodified-Since"
+                                                    "Range" "Range" "SSECustomerAlgorithm" "x-amz-server-side-encryption-customer-algorithm"
+                                                    "SSECustomerKey" "x-amz-server-side-encryption-customer-key" "SSECustomerKeyMD5" "x-amz-server-side-encryption-customer-key-MD5"
+                                                    "RequestPayer" "x-amz-request-payer" "ExpectedBucketOwner" "x-amz-expected-bucket-owner"
+                                                    "ChecksumMode" "x-amz-checksum-mode" ] "" ]
+
 list_bucket_analytics_configuration_param: [ GET "_bucket.s3" "/" "?analytics" [ "continuation-token" "_ContinuationToken" ]
                                              [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 list_bucket_intelligent_tiering_configurations_param: [ GET "_bucket.s3" "/" "?intelligent-tiering" [ "continuation-token" "_ContinuationToken" ]
@@ -140,6 +160,12 @@ execute_call: function [ param [block!] val [block!] ] [
     endpoint: rejoin [ "https://" host ]
 
     canonical_uri: param/3
+    if find canonical_uri "_" [
+        uri_parameters: select val "uri"
+        foreach [ key value ] uri_parameters [
+            replace canonical_uri key value
+        ]
+    ]
 
     ; quuerystring
     canonical_querystring_brute: copy param/4
@@ -338,15 +364,5 @@ execute_call: function [ param [block!] val [block!] ] [
 ;execute_call get_bucket_cors_param val
 ;execute_call get_bucket_tagging_param val
 ;execute_call get_bucket_versioning_param val
-
-;val: [ "_bucket" "test-hosting-dual-apps" "param" [ "ExpectedBucketOwner" "436735548418" "RequestPayer" "zzzzzz" ] ]
-;execute_call get_bucket_accelerate_configuration_param val
-
-;val: [ "_bucket" "nissan-paris-common-codepipeline-cicd" "_region" "eu-west-1" "param" [] ]
-;execute_call list_buckets_param []
-
-;val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [ "continuation-token" "54hgnlBJCTmhxRPJUXT6T0Ml_esx3XK4YAZlyzlmHd7mIOwTZHXUOAAAAAAAAAAB84rJnR0-5W8Y1uFKUJp9l5BDYLAk726aJ4RIMUQcKHnPByJh8XVZ3N0kVMeeDiABdOqN9eM9X4C3l_BrevgdXXr0BvaEJh9_qyhZ-3oJfQHstorMmAD-wsldVqeIkKTACXrkl7JGuVJMQ7lnFQa0v4phm6UECfGaoLS3XiKxpgmrBJXA2uRzi1AYR-FztESz3rNMTGDT9ZXxSvqstP0WsA" ] "param" [] ]
-;execute_call list_bucket_metrics_configurations_param val
-val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [ "prefix" "test" "encoding-type" "url" ] "param" [ "RequestPayer" "requester" ] ]
-execute_call list_objects_v2_param val
+;execute_call head_bucket_param val
 
