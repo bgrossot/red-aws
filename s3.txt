@@ -1,22 +1,22 @@
-référence : Boto3 1.28.33
+référence : * boto3 1.28.33
 Les fonctions supportées sont en retrait.
 
 S3
 
 abort_multipart_upload
-can_paginate
-close
+* boto3 can_paginate
+* boto3 close
 complete_multipart_upload
-copy
+* boto3 copy
 copy_object
 create_bucket
 create_multipart_upload
 delete_bucket
     delete_bucket_analytics_configuration
-delete_bucket_cors
-delete_bucket_encryption
-delete_bucket_intelligent_tiering_configuration
-delete_bucket_inventory_configuration
+    delete_bucket_cors
+    delete_bucket_encryption
+    delete_bucket_intelligent_tiering_configuration
+    delete_bucket_inventory_configuration
 delete_bucket_lifecycle
 delete_bucket_metrics_configuration
 delete_bucket_ownership_controls
@@ -28,10 +28,10 @@ delete_object
 delete_object_tagging
 delete_objects
 delete_public_access_block
-download_file
-download_fileobj
-generate_presigned_post
-generate_presigned_url
+* boto3 download_file
+* boto3 download_fileobj
+* boto3 generate_presigned_post
+* boto3 generate_presigned_url
     get_bucket_accelerate_configuration
     get_bucket_acl
     get_bucket_analytics_configuration
@@ -54,17 +54,17 @@ generate_presigned_url
     get_bucket_tagging
     get_bucket_versioning
     get_bucket_website
-get_object
+    get_object
     get_object_acl
     get_object_attributes
-get_object_legal_hold
-get_object_lock_configuration
-get_object_retention
-get_object_tagging
-get_object_torrent
-get_paginator
-get_public_access_block
-get_waiter
+    get_object_legal_hold
+    get_object_lock_configuration
+    get_object_retention
+    get_object_tagging
+    get_object_torrent
+* boto3 get_paginator
+    get_public_access_block
+* boto3 get_waiter
     head_bucket
     head_object
     list_bucket_analytics_configurations
@@ -77,37 +77,37 @@ list_multipart_uploads
         obsolète list_objects
     list_objects_v2
 list_parts
-put_bucket_accelerate_configuration
-put_bucket_acl
+    put_bucket_accelerate_configuration     x-amz-sdk-checksum-algorithm non implémenté
+    put_bucket_acl                          x-amz-sdk-checksum-algorithm non implémenté
     put_bucket_analytics_configuration
-put_bucket_cors
-put_bucket_encryption
-put_bucket_intelligent_tiering_configuration
-put_bucket_inventory_configuration
-put_bucket_lifecycle
-put_bucket_lifecycle_configuration
-put_bucket_logging
-put_bucket_metrics_configuration
-put_bucket_notification
-put_bucket_notification_configuration
-put_bucket_ownership_controls
-put_bucket_policy
-put_bucket_replication
-put_bucket_request_payment
-put_bucket_tagging
-put_bucket_versioning
-put_bucket_website
-put_object
-put_object_acl
-put_object_legal_hold
-put_object_lock_configuration
-put_object_retention
-put_object_tagging
-put_public_access_block
+    put_bucket_cors                         x-amz-sdk-checksum-algorithm non implémenté
+    put_bucket_encryption                   x-amz-sdk-checksum-algorithm non implémenté
+    put_bucket_intelligent_tiering_configuration
+    put_bucket_inventory_configuration
+        obsolète put_bucket_lifecycle
+    put_bucket_lifecycle_configuration
+    put_bucket_logging                      x-amz-sdk-checksum-algorithm non implémenté
+    put_bucket_metrics_configuration
+        obsolète put_bucket_notification
+    put_bucket_notification_configuration   x-amz-sdk-checksum-algorithm non implémenté
+    put_bucket_ownership_controls
+    put_bucket_policy                       x-amz-sdk-checksum-algorithm non implémenté
+    put_bucket_replication                  x-amz-sdk-checksum-algorithm non implémenté
+    put_bucket_request_payment              x-amz-sdk-checksum-algorithm non implémenté
+    put_bucket_tagging                      x-amz-sdk-checksum-algorithm non implémenté
+    put_bucket_versioning                   x-amz-sdk-checksum-algorithm non implémenté
+    put_bucket_website                      x-amz-sdk-checksum-algorithm non implémenté
+    put_object                              x-amz-sdk-checksum-algorithm non implémenté
+    put_object_acl                          x-amz-sdk-checksum-algorithm non implémenté
+    put_object_legal_hold                   x-amz-sdk-checksum-algorithm non implémenté
+    put_object_lock_configuration           x-amz-sdk-checksum-algorithm non implémenté
+    put_object_retention                    x-amz-sdk-checksum-algorithm non implémenté
+    put_object_tagging                      x-amz-sdk-checksum-algorithm non implémenté
+    put_public_access_block                 x-amz-sdk-checksum-algorithm non implémenté
 restore_object
 select_object_content
-upload_file
-upload_fileobj
+* boto3 upload_file
+* boto3 upload_fileobj
 upload_part
 upload_part_copy
 write_get_object_response
