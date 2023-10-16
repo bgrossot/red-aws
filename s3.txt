@@ -9,25 +9,25 @@ abort_multipart_upload
 complete_multipart_upload
 * boto3 copy
 copy_object
-create_bucket
+    create_bucket
 create_multipart_upload
-delete_bucket
+    delete_bucket
     delete_bucket_analytics_configuration
     delete_bucket_cors
     delete_bucket_encryption
     delete_bucket_intelligent_tiering_configuration
     delete_bucket_inventory_configuration
-delete_bucket_lifecycle
-delete_bucket_metrics_configuration
-delete_bucket_ownership_controls
-delete_bucket_policy
-delete_bucket_replication
-delete_bucket_tagging
-delete_bucket_website
-delete_object
-delete_object_tagging
-delete_objects
-delete_public_access_block
+    delete_bucket_lifecycle
+    delete_bucket_metrics_configuration
+    delete_bucket_ownership_controls
+    delete_bucket_policy
+    delete_bucket_replication
+    delete_bucket_tagging
+    delete_bucket_website
+    delete_object
+    delete_object_tagging
+    delete_objects                          x-amz-sdk-checksum-algorithm non implémenté
+    delete_public_access_block
 * boto3 download_file
 * boto3 download_fileobj
 * boto3 generate_presigned_post
@@ -102,7 +102,7 @@ list_parts
     put_object_legal_hold                   x-amz-sdk-checksum-algorithm non implémenté
     put_object_lock_configuration           x-amz-sdk-checksum-algorithm non implémenté
     put_object_retention                    x-amz-sdk-checksum-algorithm non implémenté
-    put_object_tagging                      x-amz-sdk-checksum-algorithm non implémenté
+    put_object_tagging                      >-amz-sdk-checksum-algorithm non implémenté
     put_public_access_block                 x-amz-sdk-checksum-algorithm non implémenté
 restore_object
 select_object_content
