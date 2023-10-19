@@ -78,6 +78,25 @@ foreach lines cred [
 ; PROBABLEMENT INUTILE, CE TYPE DE CAS N'EXISTE PAS
 ; [ required_request_values required_request_parameters ]
 
+copy_object_param: [ PUT "_bucket.s3" "/_key" "" [] []
+                    [ "ACL" "x-amz-acl" "CacheControl" "Cache-Control" "ChecksumAlgorithm" "x-amz-checksum-algorithm"
+                      "ContentDisposition" "Content-Disposition" "ContentEncoding" "Content-Encoding" "ContentLanguage" "Content-Language"
+                      "ContentType" "Content-Type" "CopySource" "x-amz-copy-source" "CopySourceIfMatch" "x-amz-copy-source-if-match"
+                      "CopySourceIfModifiedSince" "x-amz-copy-source-if-modified-since" "CopySourceIfNoneMatch" "x-amz-copy-source-if-none-match"
+                      "CopySourceIfUnmodifiedSince" "x-amz-copy-source-if-unmodified-since" "Expires" "Expires"
+                      "GrantFullControl" "x-amz-grant-full-control" "GrantRead" "x-amz-grant-read" "GrantReadACP" "x-amz-grant-read-acp"
+                      "GrantWriteACP" "x-amz-grant-write-acp" "MetadataDirective" "x-amz-metadata-directive" "TaggingDirective" "x-amz-tagging-directive"
+                      "ServerSideEncryption" "x-amz-server-side-encryption" "StorageClass" "x-amz-storage-class" "WebsiteRedirectLocation" "x-amz-website-redirect-location"
+                      "SSECustomerAlgorithm" "x-amz-server-side-encryption-customer-algorithm" "SSECustomerKey" "x-amz-server-side-encryption-customer-key"
+                      "SSECustomerKeyMD5" "x-amz-server-side-encryption-customer-key-MD5" "SSEKMSKeyId" "x-amz-server-side-encryption-aws-kms-key-id"
+                      "SSEKMSEncryptionContext" "x-amz-server-side-encryption-context" "BucketKeyEnabled" "x-amz-server-side-encryption-bucket-key-enabled"
+                      "CopySourceSSECustomerAlgorithm" "x-amz-copy-source-server-side-encryption-customer-algorithm"
+                      "CopySourceSSECustomerKey" "x-amz-copy-source-server-side-encryption-customer-key"
+                      "CopySourceSSECustomerKeyMD5" "x-amz-copy-source-server-side-encryption-customer-key-MD5"
+                      "RequestPayer" "x-amz-request-payer" "Tagging" "x-amz-tagging" "ObjectLockMode" "x-amz-object-lock-mode"
+                      "ObjectLockRetainUntilDate" "x-amz-object-lock-retain-until-date" "ObjectLockLegalHoldStatus" "x-amz-object-lock-legal-hold"
+                      "ExpectedBucketOwner" "x-amz-expected-bucket-owner" "ExpectedSourceBucketOwner" "x-amz-source-expected-bucket-owner" ] "" ]
+
 create_bucket_param: [ PUT "_bucket.s3" "/" "" [] []
                        [ "ACL" "x-amz-acl" "GrantFullControl" "x-amz-grant-full-control" "GrantRead" "x-amz-grant-read"
                          "GrantReadACP" "x-amz-grant-read-acp" "GrantWrite" "x-amz-grant-write" "GrantWriteACP" "x-amz-grant-write-acp"
@@ -140,12 +159,11 @@ get_object_acl_param: [ GET "_bucket.s3" "/_key" "?acl" [ "versionId" "_VersionI
                         [] [ "RequestPayer" "x-amz-request-payer" "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 
 get_object_attributes_param: [ GET "_bucket.s3" "/_key" "?attributes" [ "versionId" "_VersionId" ]
-                                                                        [] [ "MaxParts" "x-amz-max-parts" "PartNumberMarker" "x-amz-part-number-marker"
-                                                                        "SSECustomerAlgorithm" "x-amz-server-side-encryption-customer-algorithm"
-                                                                        "SSECustomerKey" "x-amz-server-side-encryption-customer-key"
-                                                                        "SSECustomerKeyMD5" "x-amz-server-side-encryption-customer-key-MD5"
-                                                                        "RequestPayer" "x-amz-request-payer" "ExpectedBucketOwner" "x-amz-expected-bucket-owner"
-                                                                        "ObjectAttributes" "x-amz-object-attributes" ] "" ]
+                               [] [ "MaxParts" "x-amz-max-parts" "PartNumberMarker" "x-amz-part-number-marker"
+                                    "SSECustomerAlgorithm" "x-amz-server-side-encryption-customer-algorithm"
+                                    "SSECustomerKey" "x-amz-server-side-encryption-customer-key"
+                                    "SSECustomerKeyMD5" "x-amz-server-side-encryption-customer-key-MD5" "RequestPayer" "x-amz-request-payer"
+                                    "ExpectedBucketOwner" "x-amz-expected-bucket-owner" "ObjectAttributes" "x-amz-object-attributes" ] "" ]
 
 get_object_legal_hold_param: [ GET "_bucket.s3" "/_key" "?legal-hold" [ "versionId" "_VersionId" ]
                                [] [ "RequestPayer" "x-amz-request-payer" "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
@@ -187,8 +205,8 @@ list_object_versions_param: [ GET "_bucket.s3" "/" "?versions" [ "delimiter" "_D
 list_objects_v2_param: [ GET "_bucket.s3" "/" "?list-type=2" [ "continuation-token" "_ContinuationToken" "delimiter" "_Delimiter"
                                                                "encoding-type" "_EncodingType" "fetch-owner" "_FetchOwner"
                                                                "max-keys" "_MaxKeys" "prefix" "_Prefix" "start-after" "_StartAfter" ]
-                                                               [] [ "RequestPayer" "x-amz-request-payer" "ExpectedBucketOwner" "x-amz-expected-bucket-owner"
-                                                                    "OptionalObjectAttributes" "x-amz-optional-object-attributes" ] "" ]
+                         [] [ "RequestPayer" "x-amz-request-payer" "ExpectedBucketOwner" "x-amz-expected-bucket-owner"
+                              "OptionalObjectAttributes" "x-amz-optional-object-attributes" ] "" ]
 
 put_bucket_accelerate_configuration_param: [ PUT "_bucket.s3" "/" "?accelerate" [] [] [ "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 
@@ -257,6 +275,34 @@ put_object_retention_param: [ PUT "_bucket.s3" "/_key" "?retention" [ "versionId
 put_object_tagging_param: [ PUT "_bucket.s3" "/_key" "?tagging" [ "versionId" "_VersionId" ]
                             [] [  "ContentMD5" "Content-MD5" "RequestPayer" "x-amz-request-payer" "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
 put_public_access_block_param: [ PUT "_bucket.s3" "/" "?publicAccessBlock" [] [] [ "ContentMD5" "Content-MD5" "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
+
+restore_object_param: [ POST "_bucket.s3" "/_key" "?restore" [ "versionId" "_VersionId" ]
+                        [] [ "RequestPayer" "x-amz-request-payer" "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
+
+select_object_content_param: [ POST "_bucket.s3" "/_key" "?restore&select-type=2" []
+                               [] [ "SSECustomerAlgorithm" "x-amz-server-side-encryption-customer-algorithm" "SSECustomerKey" "x-amz-server-side-encryption-customer-key"
+                                    "SSECustomerKeyMD5" "x-amz-server-side-encryption-customer-key-MD5" "ExpectedBucketOwner" "x-amz-expected-bucket-owner" ] "" ]
+
+write_get_object_response_param: [ POST "s3" "/WriteGetObjectResponse" "" []
+                                   [] [ "RequestRoute" "x-amz-request-route" "RequestToken" "x-amz-request-token" "StatusCode" "x-amz-fwd-status"
+                                        "ErrorCode" "x-amz-fwd-error-code" "ErrorMessage" "x-amz-fwd-error-message" "AcceptRanges" "x-amz-fwd-header-accept-ranges"
+                                        "CacheControl" "x-amz-fwd-header-Cache-Control" "ContentDisposition" "x-amz-fwd-header-Content-Disposition"
+                                        "ContentEncoding" "x-amz-fwd-header-Content-Encoding" "ContentLanguage" "x-amz-fwd-header-Content-Language"
+                                        "ContentLength" "Content-Length" "ContentRange" "x-amz-fwd-header-Content-Range" "ContentType" "x-amz-fwd-header-Content-Type"
+                                        "ChecksumCRC32" "x-amz-fwd-header-x-amz-checksum-crc32" "ChecksumCRC32C" "x-amz-fwd-header-x-amz-checksum-crc32c"
+                                        "ChecksumSHA1" "x-amz-fwd-header-x-amz-checksum-sha1" "ChecksumSHA256" "x-amz-fwd-header-x-amz-checksum-sha256"
+                                        "DeleteMarker" "x-amz-fwd-header-x-amz-delete-marker" "ETag" "x-amz-fwd-header-ETag" "Expires" "x-amz-fwd-header-Expires"
+                                        "Expiration" "x-amz-fwd-header-x-amz-expiration" "LastModified" "x-amz-fwd-header-Last-Modified"
+                                        "MissingMeta" "x-amz-fwd-header-x-amz-missing-meta" "ObjectLockMode" "x-amz-fwd-header-x-amz-object-lock-mode"
+                                        "ObjectLockLegalHoldStatus" "x-amz-fwd-header-x-amz-object-lock-legal-hold"
+                                        "ObjectLockRetainUntilDate" "x-amz-fwd-header-x-amz-object-lock-retain-until-date" "PartsCount" "x-amz-fwd-header-x-amz-mp-parts-count"
+                                        "ReplicationStatus" "x-amz-fwd-header-x-amz-replication-status" "RequestCharged" "x-amz-fwd-header-x-amz-request-charged"
+                                        "Restore" "x-amz-fwd-header-x-amz-restore" "ServerSideEncryption" "x-amz-fwd-header-x-amz-server-side-encryption"
+                                        "SSECustomerAlgorithm" "x-amz-fwd-header-x-amz-server-side-encryption-customer-algorithm"
+                                        "SSEKMSKeyId" "x-amz-fwd-header-x-amz-server-side-encryption-aws-kms-key-id"
+                                        "SSECustomerKeyMD5" "x-amz-fwd-header-x-amz-server-side-encryption-customer-key-MD5" "StorageClass" "x-amz-fwd-header-x-amz-storage-class"
+                                        "TagCount" "x-amz-fwd-header-x-amz-tagging-count" "VersionId" "x-amz-fwd-header-x-amz-version-id"
+                                        "BucketKeyEnabled" "x-amz-fwd-header-x-amz-server-side-encryption-bucket-key-enabled" ] "" ]
 
 ; META
 ;les arguments optionnels doivent être mis en refinement
@@ -430,6 +476,7 @@ execute_call: function [ param [block!] val [block!] ] [
         ]
     ]
 
+    ; indispensable pour delte_objects
     if method == 'POST [ put headermap to set-word! "Content-Type" "application/xml" ]
 
     ; signed_headers et canonical_headers doivent être par ordre alphabétique
@@ -497,7 +544,6 @@ execute_call: function [ param [block!] val [block!] ] [
 ;execute_call get_object_lock_configuration_param val
 ;execute_call delete_bucket_encryption_param val
 
-
 ;val: [ "_bucket" "test-hosting-dual-apps" "param" [ "IfMatch" "ZZZ"] "uri" [ "_key" "index.html" ] ]
 ;execute_call head_object_param val
 
@@ -540,6 +586,10 @@ execute_call: function [ param [block!] val [block!] ] [
 ;val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "query" [ "_Id" "ztestinv2" ] "param" [] ]
 ;execute_call delete_bucket_intelligent_tiering_configuration_param val
 ;execute_call delete_bucket_inventory_configuration_param val
+
+
+val: [ "" "" "query" [] "param" [] ]
+execute_call write_get_object_response_param val
 
 ; body1:
 ; {
@@ -598,22 +648,25 @@ execute_call: function [ param [block!] val [block!] ] [
 ; val/6/2: ck
 ; execute_call put_object_param val
 
-body:
-{
-<Delete xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-   <Object>
-      <Key>ztest3.file</Key>
-   </Object>
-</Delete>
-}
+; body:
+; {
+; <Delete xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+;    <Object>
+;       <Key>ztest3.file</Key>
+;    </Object>
+; </Delete>
+; }
 
-ck: enbase checksum body 'MD5
-; pour un POST, on rajoute le body uriencode + "="
+; ck: enbase checksum body 'MD5
+; ; pour un POST, on rajoute le body uriencode + "="
 
-val: [ "_bucket" "test-hosting-dual-apps" "param" [ "ContentMD5" "dddddddddddddd" ] "body" body ]
-val/4/2: ck
+; val: [ "_bucket" "test-hosting-dual-apps" "param" [ "ContentMD5" "dddddddddddddd" ] "body" body ]
+; val/4/2: ck
 
-execute_call delete_objects_param val
+; execute_call delete_objects_param val
+
+;val: [ "_bucket" "test-hosting-dual-apps" "_region" "eu-west-1" "param" [ "CopySource" "/test-hosting-dual-apps/index.html" ] "uri" [ "_key" "ztest3.file" ] ]
+;execute_call copy_object_param val
 
 ; body:
 ; {

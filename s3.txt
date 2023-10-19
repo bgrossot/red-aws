@@ -8,7 +8,7 @@ abort_multipart_upload
 * boto3 close
 complete_multipart_upload
 * boto3 copy
-copy_object
+    copy_object
     create_bucket
 create_multipart_upload
     delete_bucket
@@ -102,12 +102,12 @@ list_parts
     put_object_legal_hold                   x-amz-sdk-checksum-algorithm non implémenté
     put_object_lock_configuration           x-amz-sdk-checksum-algorithm non implémenté
     put_object_retention                    x-amz-sdk-checksum-algorithm non implémenté
-    put_object_tagging                      >-amz-sdk-checksum-algorithm non implémenté
+    put_object_tagging                      x-amz-sdk-checksum-algorithm non implémenté
     put_public_access_block                 x-amz-sdk-checksum-algorithm non implémenté
-restore_object
-select_object_content
+    restore_object                          x-amz-sdk-checksum-algorithm non implémenté
+    select_object_content
 * boto3 upload_file
 * boto3 upload_fileobj
 upload_part
 upload_part_copy
-write_get_object_response
+    write_get_object_response
